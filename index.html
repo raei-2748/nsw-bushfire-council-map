@@ -791,7 +791,6 @@ input[type="search"]:focus, select:focus { outline: none; border-bottom-color: v
 .legend .sw.hatch { background: repeating-linear-gradient(45deg, var(--nofire) 0 3px, var(--hatch) 3px 4px); }
 
 .mapbox { position: relative; }
-.layerinfo { margin-top: 18px; gap: 6px; }
 #map { height: min(72vh, 740px); min-height: 420px; width: 100%; background: var(--sea); }
 .leaflet-container { font-family: var(--font); background: var(--sea); }
 .zoombtns { position: absolute; top: 12px; right: 12px; z-index: 500; display: flex; gap: 14px; }
@@ -855,10 +854,18 @@ td.r, th.r { text-align: right; padding-right: 0; padding-left: 10px; }
 .empty { color: var(--muted); font-size: 0.85rem; }
 
 /* below the map */
-.below { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
-@media (max-width: 1000px) { .below { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
-details summary { cursor: pointer; font-weight: 500; font-size: 0.9rem; }
-.list { margin-top: 12px; max-height: 420px; overflow-y: auto; }
+.below { margin-top: 36px; border-top: 1px solid var(--line); }
+.tog { border-bottom: 1px solid var(--line); }
+.tog summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0; font-size: 0.9rem; font-weight: 500; color: var(--ink-2); }
+.tog summary::-webkit-details-marker { display: none; }
+.tog summary::after { content: "+"; font-size: 1.1rem; font-weight: 400; color: var(--muted); }
+.tog[open] summary::after { content: "−"; }
+.tog summary:hover { color: var(--ink); }
+.togbody { padding: 0 0 20px; max-width: 90ch; display: flex; flex-direction: column; gap: 8px; }
+.layerinfo .desc { color: var(--ink-2); font-size: 0.875rem; }
+.layerinfo .src { color: var(--muted); font-size: 0.78rem; }
+.list { max-height: 420px; overflow-y: auto; max-width: none; }
 .list button { border: 0; background: none; padding: 0; color: var(--ink); cursor: pointer; text-align: left; font-weight: 500;
   text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
 .about { display: flex; flex-direction: column; gap: 12px; font-size: 0.85rem; color: var(--ink-2); }
@@ -936,32 +943,31 @@ footer { margin-top: 36px; font-size: 0.72rem; color: var(--muted); }
         <div class="zoombtns"><button type="button" id="z-nsw">All NSW</button><button type="button" id="z-syd">Sydney</button></div>
         <div class="hint" id="hint">Hover for values · click a council for details · click the map, then scroll to zoom</div>
       </div>
-      <section class="card layercard layerinfo">
-                <p class="desc" id="lc-desc"></p>
-        <p class="src" id="lc-src"></p>
-      </section>
+
     </main>
     <aside class="card panel" id="panel" aria-live="polite"></aside>
   </div>
 
   <div class="below">
-    <section class="card">
-      <details id="tbl-details">
-        <summary id="tbl-sum">Table: councils in this view</summary>
-        <div class="list tbl-wrap" id="tbl"></div>
-      </details>
-    </section>
-    <section class="card about">
-      <h3>How to read this map</h3>
-      <ul>
+    <details class="tog">
+      <summary>About this layer</summary>
+      <div class="togbody layerinfo"><p class="desc" id="lc-desc"></p><p class="src" id="lc-src"></p></div>
+    </details>
+    <details class="tog">
+      <summary>How to read this map</summary>
+      <div class="togbody about"><ul>
         <li><b>Tested</b> means the pattern across councils was checked with rules fixed in advance (Experiments 7 and 11). <b>Descriptive</b> means the numbers are shown as they are, with no test. A single council's value is always descriptive.</li>
         <li><b>Missing stays missing.</b> Striped councils had a fire but no figure. Pale grey councils had no declared fire in that season, or are outside the layer.</li>
         <li><b>One value per council and season.</b> Where a council had more than one declared fire in a season, the map shows the largest homes-destroyed figure (adding them could count the same homes twice). The panel lists every fire.</li>
         <li><b>Compared with unburned councils.</b> Grant layers show the change from the council's own two years before the fire, minus the typical change in NSW councils with no declared fire that season.</li>
         <li>The composite cost score in Experiment 9 (Y v3) had <b>no skill</b> as a pre-fire risk map, so it is not mapped as a risk layer. It appears only in the panel, as the after-the-fire score for each fire.</li>
       </ul>
-      <p>Full write-up: <a href="https://claude.ai/code/artifact/51631445-162e-4adc-b38d-babd320fd8ed" target="_blank" rel="noopener">Where Does a Bushfire's Cost Go?</a> (Ray's report; the link may need sharing).</p>
-    </section>
+      <p>Full write-up: <a href="https://claude.ai/code/artifact/51631445-162e-4adc-b38d-babd320fd8ed" target="_blank" rel="noopener">Where Does a Bushfire's Cost Go?</a> (Ray's report; the link may need sharing).</p></div>
+    </details>
+    <details class="tog" id="tbl-details">
+      <summary id="tbl-sum">Table: councils in this view</summary>
+      <div class="togbody list tbl-wrap" id="tbl"></div>
+    </details>
   </div>
   <footer id="foot"></footer>
 </div>
